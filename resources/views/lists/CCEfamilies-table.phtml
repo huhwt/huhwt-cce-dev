@@ -1,0 +1,44 @@
+<?php
+
+declare(strict_types=1);
+
+use Fisharebest\Webtrees\Age;
+use Fisharebest\Webtrees\Date;
+use Fisharebest\Webtrees\Individual;
+use Fisharebest\Webtrees\Registry;
+use Fisharebest\Webtrees\Family;
+use Fisharebest\Webtrees\I18N;
+use Fisharebest\Webtrees\Session;
+use Fisharebest\Webtrees\Tree;
+use Fisharebest\Webtrees\View;
+use Illuminate\Support\Collection;
+
+
+/**
+ * @var Tree                    $tree
+ * @var Collection<int,Family>  $families
+ */
+
+// EW.H - MOD ... we want the original view-contents
+$html = View::make('::lists/families-table', [
+    'families' => $families,       // EW.H - MOD ... 
+    'tree'     => $tree,
+]);
+// EW.H - MOD ... and we want to extract the original script-contents
+$html_s = $this->stack('javascript');
+$html_js = substr($html_s,0,9).'const FLdT='.substr($html_s,9);
+// EW.H - MOD ... we define our own script
+$html_js1 = View::make('lists/CCEfamilies-table-js', []);
+$file = Session::get('CCEfamilies-table-js');
+$CCEjs = file_get_contents($file);
+$html_js2 = '<script>
+' . $CCEjs . '
+</script>';
+// EW.H - MOD ... we put all together
+$html_js .= $html_js1 . $html_js2;
+// EW.H - MOD ... now we have to restore the script-contents
+$this->push('javascript');
+echo $html_js;
+$this->endpush();
+
+echo $html;

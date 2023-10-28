@@ -122,17 +122,14 @@ function prepCAevents(thElem) {
                 delem.addEventListener( 'click', event => {
                     if (celemt.includes('|'))                                    // ... extended text? ...
                         celemt = celemt.substring(0, celemt.indexOf('|'));       // ... cut off extension
-                    clickCAdelete(trElem, celem, delem);                        // ... to feed the handler
+                    clickCAdelete(trElem, celemt, delem);                        // ... to feed the handler
                 });
 
             }
         }
     }
 }
-function clickCAdelete(trElem, celem, delem) {
-    let celemt = celem.innerText;
-    let doneHighlight = celem.classList.contains("CCEhighlighted");
-    let doRefresh = false;
+function clickCAdelete(trElem, celemt, delem) {
     let XREFs = [];
     let tbodies = document.querySelectorAll("table.CCE-facts-table > tbody");       // all tables with records
     for ( const tbody of tbodies) {
@@ -153,8 +150,6 @@ function clickCAdelete(trElem, celem, delem) {
                     tbody.removeChild(span_tr);                                     // ... no: remove the record-line
                     tcount--;
                     tcount_tc--;
-                    if (doneHighlight)
-                        doRefresh = true;
                 }
                 if (!XREFs.includes(xref))                                          // put xref in list
                     XREFs.push(xref);
@@ -171,13 +166,9 @@ function clickCAdelete(trElem, celem, delem) {
     let trElemoBadge = trElemo.querySelector("span.badge.bg-secondary");
     let tcount = parseInt(trElemoBadge.textContent) - 1;
     trElemoBadge.textContent = tcount.toString();
-
-    if (doRefresh) {
-        refreshTR();
-    }
 }
 function execCAdelete(delem, XREFs) {
-    let cartAct = delem.getAttribute('cartact');
+    let cartAct = delem.getAttribute('cartActs');
     let action = delem.getAttribute('action');
     let route_ajax = delem.getAttribute('data-url');
     let _url = decodeURIComponent(route_ajax);
@@ -259,12 +250,12 @@ function clickCAtoggler(thElem, tbElem, trElem, elemev, elemevt) {
         tbHBadge.textContent = " "  + trC.toString() + " ";
     
     }
-}
     function tr_vis(tr_line, doState) {
         let trvis = (doState ? "visible" : "none");
         let trstyle = "display:" + trvis;
         tr_line.setAttribute("style", trstyle);
     }
+}
 function getCCEcolor(tbElem, trElem, colorDo) {
     let colorsOn = tbElem.getAttribute("colorsOn");
     colOn = [];
@@ -303,19 +294,4 @@ function getCCEcolor(tbElem, trElem, colorDo) {
     colorsOff = colOff.join(';');
     tbElem.setAttribute("colorsOff", colorsOff);
     return ["CCE"+trColor, colorsOn.length];
-}
-
-function refreshTR() {
-    let tbodies = document.querySelectorAll("table.CCE-facts-table > tbody");
-    for ( const tbody of tbodies) {
-        let trC = 0;                                                        // we want to count badged lines
-        let tr_lines = tbody.querySelectorAll("tr.CCE_Rline");          // ... so we collect the table-lines carrying gedcom-records ...
-        for ( const tr_line of tr_lines) {                              // ... and traverse over it ...
-            tr_vis(tr_line, true);                                  // ... the whole line is set visible ...
-            trC++;                                                      // add counter
-        }
-        let tbHead = tbody.previousElementSibling;
-        let tbHBadge = tbHead.querySelector("span.badge.bg-secondary");
-        tbHBadge.textContent = " "  + trC.toString() + " ";
-     }
 }

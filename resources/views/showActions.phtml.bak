@@ -15,8 +15,6 @@ use Fisharebest\Webtrees\Tree;
 
 ?>
 
-<?php asort($cartActions); ?>
-
 <h4><?= $header_acts ?></h4>
 
 <?php if ($cartActions === []) : ?>

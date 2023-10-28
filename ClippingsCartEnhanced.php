@@ -354,12 +354,6 @@ class ClippingsCartEnhanced extends ClippingsCartModule
      */
     private string $callingURI = '';
 
-    /**
-     * hold references to associated classes
-     */
-    protected CCEIndividualListModule $CCEindiList;
-    private CCEFamilyListModule $CCEfamList;
-
     private ModuleService $module_service;
 
     /** 
@@ -1116,15 +1110,15 @@ class ClippingsCartEnhanced extends ClippingsCartModule
                 ]);
                 break;
 
-            case self::EMPTY_CREATED:
-                $this->doEmpty_CreatedAction($tree, $request);
-                $url = route('module', [
-                    'module'      => $this->name(),
-                    'action'      => 'Show',
-                    'description' => $this->description(),
-                    'tree'        => $tree->name(),
-                ]);
-                break;
+            // case self::EMPTY_CREATED:
+            //     $this->doEmpty_CreatedAction($tree, $request);
+            //     $url = route('module', [
+            //         'module'      => $this->name(),
+            //         'action'      => 'Show',
+            //         'description' => $this->description(),
+            //         'tree'        => $tree->name(),
+            //     ]);
+            //     break;
     
             default;
                 $txt_option = I18N::translate($option);
@@ -1133,29 +1127,6 @@ class ClippingsCartEnhanced extends ClippingsCartModule
         }
 
         return redirect($url);
-    }
-
-    /**
-     * delete selected types of record from the clippings cart
-     *
-     * @param Tree  $tree
-     * @param ServerRequestInterface $request
-     *
-     */
-    public function doEmpty_CreatedAction(Tree $tree, ServerRequestInterface $request): void
-    {
-        $cartAct = Session::get('cartActs', []);
-        $cartactions = $cartAct[$tree->name()];
-        foreach ($cartactions as $cact => $cval) {
-            $delKey = Validator::parsedBody($request)->string($cact, 'none');  // ... are listed in request
-            if ($delKey !== 'none') 
-                unset($cartAct[$tree->name()][$cact]);
-        }
-        Session::put('cartActs', $cartAct);
-
-        $doRebuild = new RebuildCart($tree, $cartAct[$tree->name()]);
-        $doRebuild->rebuild();
-        
     }
 
     /**
@@ -1209,34 +1180,6 @@ class ClippingsCartEnhanced extends ClippingsCartModule
         unset($cart[$tree->name()][$xref]);
         Session::put('cart', $cart);
 
-        $url = route('module', [
-            'module'      => $this->name(),
-            'action'      => 'Show',
-            'description' => $this->description(),
-            'tree'        => $tree->name(),
-        ]);
-
-        return redirect($url);
-    }
-
-    /**
-     * delete one record from the clippings cart
-     *
-     * @param ServerRequestInterface $request
-     *
-     * @return ResponseInterface
-     */
-    public function postCartActRemoveAction(ServerRequestInterface $request): ResponseInterface
-    {
-        $tree = Validator::attributes($request)->tree();
-
-        $cact = Validator::queryParams($request)->string('cartActs', '');
-
-        $cartAct = $this->cleanCartActs_cact($tree, $cact);
-
-        $doRebuild = new RebuildCart($tree, $cartAct[$tree->name()]);
-        $doRebuild->rebuild();
-        
         $url = route('module', [
             'module'      => $this->name(),
             'action'      => 'Show',
@@ -1646,17 +1589,6 @@ class ClippingsCartEnhanced extends ClippingsCartModule
         $CCEjs = $this->resourcesFolder() . 'js/CCEfamilies-table-js.js';
         Session::put('CCEfamilies-table-js', $CCEjs);
 
-        // $this->CCEindiList = new CCEIndividualListModule($this);
-        // $this->CCEfamList = new CCEFamilyListModule($this);
-
-        // $associated = new Collection();
-        // $associated->put(1, $this->CCEindiList);
-        // $associated->put(2, $this->CCEfamList);
-
-        // foreach ($associated as $associated) {
-        //     $associated->boot();
-        // }
- 
     }
 
     /**

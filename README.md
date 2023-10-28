@@ -42,7 +42,9 @@ This Readme contains the following main sections
 
 Functions and actions for records are described in detail in the [Hartenthaler module description](/README-CCE.md).
 
-The entries in the clippings cart may be cleaned up by undoing specific collection actions, too.
+In addition to the clipping actions covered in the webtrees standard, this module can also take data from the 'FamilyListModule'. 
+
+The clipping actions carried out are displayed as an additional overview. You can filter the collected entries according to these actions. Each of these actions can be undone individually, but deleting an action is not reversible.
 
 An action initiated by the user then takes place on the records in the clippings cart, such as
 * the export to a GEDCOM zip file, as in the actual clippings cart module
@@ -56,6 +58,10 @@ Such a function could be for example a link-node-diagram like [TAM](https://gith
 The [TAM] and [Lineage] functions are provided as their own independent modules.
 
 This module can be operated in addition to the other 'Clippings Cart' functions or replace them completely.
+
+~~~
+CAVEAT: Clippings of other 'Clippings Cart' functions can't be undone because of missing references. You'll have to remove the cart completely.
+~~~
 
 ---
 
@@ -76,7 +82,7 @@ echo view('lists/surnames-tableCCE', [
 ## Requirements
 
 This module requires **PHP 8.2** at least.
-This module requires **webtrees** version 2.1.x.
+This module requires **webtrees** version 2.1.18 at least.
 This module has the same general requirements as [webtrees#system-requirements](https://github.com/fisharebest/webtrees#system-requirements).
 
 <a name="installation"></a>
@@ -84,14 +90,14 @@ This module has the same general requirements as [webtrees#system-requirements](
 
 This section documents installation instructions for this module.
 
-1. Download the [latest release](https://github.com/huhwt/huhwt-cce/releases/latest). (By now: pre-release!).
+1. Download the [latest release](https://github.com/huhwt/huhwt-cce-dev/releases/latest). (By now: pre-release!).
 3. Unzip the package into your `webtrees/modules_v4` directory of your web server.
-4. Occasionally rename the folder to `huhwt-cce`. It's safe to overwrite the respective directory if it already exists.
+4. Occasionally rename the folder to `huhwt-cce-dev`. It's recommended to remove the respective directory if it already exists.
 
 <a name="upgrade"></a>
 ## Upgrade
 
-To update simply replace the huhwt-cce files with the new ones from the latest release.
+To update simply replace the huhwt-cce-dev files with the new ones from the latest release.
 
 <a name="translation"></a>
 ## Translation
